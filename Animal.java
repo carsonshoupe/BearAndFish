@@ -5,20 +5,30 @@ class Animal{
 	private static int animalCounter = 0; 
 	private int animalID; 
 	private int animalDirection;
+	private int animalLocation; 
 	
 	//Constructors: 
-	Animal(){
+	Animal(int location){
 		Animal.animalCounter++; 
 		this.animalID = animalCounter; 
 		this.animalDirection = 0;
+		this.animalLocation = location; 
+	}
+	
+	Animal(){
+		this(0); 
 	}
 	
 	//Methods: 
 	public static int getAnimalCounter(){return Animal.animalCounter;}
 	public int getAnimalID(){return this.animalID;}
 	public int getAnimalDirection(){return this.animalDirection;}
+	public int getAnimalLocation(){return this.animalLocation;}
 	public void setAnimalDirection(int direction){
 		this.animalDirection = direction;
+	}
+	public void setAnimalLocation(int location){
+		this.animalLocation = location;
 	}
 	
 	public int decideDirection(){
@@ -35,14 +45,24 @@ class Animal{
 		private int bearID; 
 
 		//Constructors:
-		Bear(){
+		Bear(int location){
 			Bear.bearCounter++;
 			this.bearID = bearCounter; 
+		}
+		
+		Bear(){
+			this(0); 
 		}
 
 		//Methods: 
 		public static int getBearCounter(){return Bear.bearCounter;}
 		public int getBearID(){return this.bearID;}
+		
+		@Override
+		public String toString(){
+			String outputString = "Bear: " + this.bearID;
+			return outputString;
+		}
 	}
 
 	
@@ -52,14 +72,24 @@ class Animal{
 		private int fishID; 
 		
 		//Constructors:
-		Fish(){
+		Fish(int location){
 			Fish.fishCounter++; 
 			this.fishID = fishCounter; 
+		}
+		
+		Fish(){
+			this(0); 
 		}
 		
 		//Methods: 
 		public static int getFishCounter(){return Fish.fishCounter;}
 		public int getFishID(){return this.fishID;}
+		
+		@Override
+		public String toString(){
+			String outputString = "Fish: " + this.fishID;
+			return outputString;
+		}
 	}
 		
 	
