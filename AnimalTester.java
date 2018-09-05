@@ -23,6 +23,12 @@ public static void main(String args[]){
 	bearGirl.setAnimalDirection(bearGirl.decideDirection()); 
 	
 	System.out.println("bearGirl direction: " + bearGirl.getAnimalDirection());
+	
+	boolean ans = bearGirl.getClass() == fishGirl.getClass();
+	
+	System.out.println("bearGirl class equal fishGirl class?: " + ans);
+	
+	System.out.println("Class of bearGirl = " + bearGirl.getClass()); 
 }
 }
 	
