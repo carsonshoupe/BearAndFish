@@ -12,12 +12,17 @@ class RiverSimulator{
 	public String[] simulatedRiver; 
 	public int riverLength = 0;
 	private static int bearReproductions; 
-	private static int fishReproductions; 
+	private static int fishReproductions;
+	public BearFactory bearFactory; 
+	public FishFactory fishFactory; 
 	
 	//Constructors:
-	RiverSimulator(int lengthOfRiver, int numberOfBears, int numberOfFish){
+	RiverSimulator(int lengthOfRiver, BearFactory inputBearFactory, int numberOfBears, FishFactory inputFishFactory, int numberOfFish){
 		this.riverLength = lengthOfRiver;
 		this.originalRiver = new Animal[this.riverLength]; 
+		this.bearFactory = inputBearFactory;
+		this.fishFactory = inputFishFactory;
+		
 		assignAnimalLocations(numberOfBears, numberOfFish); 
 		
 		this.workingRiver = new Animal[this.riverLength]; 
@@ -51,7 +56,7 @@ class RiverSimulator{
 			int nextLocation = locations.get(animalCounter);
 			System.out.println("nextLocation: " + nextLocation);
 			animalCounter++;
-			originalRiver[nextLocation] = new Bear(nextLocation);
+			originalRiver[nextLocation] = this.bearFactory.getBear(nextLocation);
 			System.out.println("Bear thinks he's at location " + originalRiver[nextLocation].getAnimalLocation()); 
 		}
 		
@@ -59,7 +64,7 @@ class RiverSimulator{
 			int nextLocation = locations.get(animalCounter);
 			System.out.println("nextLocation: " + nextLocation);
 			animalCounter++;
-			originalRiver[nextLocation] = new Fish(nextLocation); 
+			originalRiver[nextLocation] = this.fishFactory.getFish(nextLocation); 
 			System.out.println("Fish thinks he's at location " + originalRiver[nextLocation].getAnimalLocation()); 
 		}
 	}
@@ -101,9 +106,7 @@ class RiverSimulator{
 					System.out.println("\t Location: " + currentAnimal.getAnimalLocation());
 					System.out.println("\t Direction: " + currentAnimal.getAnimalDirection());
 					
-					System.out.println(Arrays.toString(this.workingRiver));
-					
-					int potentialNewLocation = currentAnimal.getAnimalLocation() + currentAnimal.getAnimalDirection();
+					int potentialNewLocation = currentAnimal.getAnimalLocation() + currentAnimal.getAnimalDirection(); //can get ride of animalLocation
 					if (potentialNewLocation < 0 || potentialNewLocation > this.riverLength-1){
 						continue;
 					}
@@ -132,6 +135,8 @@ class RiverSimulator{
 							locationOfAnimalToUpdate = locationOfAnimalToUpdate - currentAnimal.getAnimalDirection(); //while loop runs 1 too many times, this is a quick fix
 							
 							int numOfUpdates = locationOfAnimalToUpdate - currentAnimal.getAnimalLocation();
+							
+							System.out.println("locationOfAnimalToUpdate: " + locationOfAnimalToUpdate + "\n" + "currentAnimal.getAnimalLocation(): " + currentAnimal.getAnimalLocation() + "\n" +  "numOfUpdates: " + numOfUpdates); 
 							
 							for (int updateLocations = locationOfAnimalToUpdate; updateLocations != riverLocation; updateLocations = updateLocations - currentAnimal.getAnimalDirection()){
 								this.executeMovement(workingRiver[updateLocations]); 
@@ -233,6 +238,7 @@ class RiverSimulator{
 	
 	public void executeMovement(Animal inputAnimal){
 		if (inputAnimal.getAnimalDirection() == 0){
+			System.out.println(Arrays.toString(this.workingRiver));
 			//do nothing
 		}
 		else{
@@ -244,6 +250,8 @@ class RiverSimulator{
 			inputAnimal.setAnimalLocation(updatedLocation);
 			
 			this.workingRiver[currentLocation] = null;
+			
+			System.out.println(Arrays.toString(this.workingRiver));
 		}
 	}
 	
@@ -266,6 +274,7 @@ class RiverSimulator{
 		if (movingAnimal instanceof Fish && hitAnimal instanceof Fish){
 			this.fishReproductions++; 
 		}	
+		System.out.println(Arrays.toString(this.workingRiver));
 	}
 	
 	public void executeReproductions(){
@@ -290,7 +299,7 @@ class RiverSimulator{
 		int locationCounter = 0; 
 		while (locationCounter < numOpenLocations){
 			if (this.bearReproductions > 0){
-				this.workingRiver[openLocations.get(locationCounter)] = new Bear(openLocations.get(locationCounter)); 
+				this.workingRiver[openLocations.get(locationCounter)] = this.bearFactory.getBear(openLocations.get(locationCounter)); 
 				this.bearReproductions--; 
 				locationCounter++; 
 			}
@@ -298,7 +307,7 @@ class RiverSimulator{
 				break;
 			}
 			if (this.fishReproductions > 0){
-				this.workingRiver[openLocations.get(locationCounter)] = new Fish(openLocations.get(locationCounter)); 
+				this.workingRiver[openLocations.get(locationCounter)] = this.fishFactory.getFish(openLocations.get(locationCounter)); 
 				this.fishReproductions--;
 				locationCounter++;
 			}
